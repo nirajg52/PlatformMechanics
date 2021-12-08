@@ -2,15 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
 
-    [SerializeField] public float speed = 300;
-    [SerializeField] public float jumpForce = 600;
-    [SerializeField] public float checkRadius = 0.001f;
+    [SerializeField] public float speed;
+    [SerializeField] public float jumpForce;
+    [SerializeField] public float checkRadius;
+    public GameObject spawnpoint; 
     public bool isGrounded;
-    public float input;
+    public float inputHorizontal;
+    public float inputVertical;
     [SerializeField] private Transform groundCheck;
     private bool isFacingright = true;
 
@@ -23,9 +26,9 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        transform.position = spawnpoint.transform.position;
         rbody2D = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-        rbody2D.gravityScale = 2.7f;
 
     }
 
@@ -33,18 +36,31 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, GroundLayerMask);
-        input = Input.GetAxisRaw("Horizontal");
+        inputHorizontal = Input.GetAxisRaw("Horizontal");
+        inputVertical = Input.GetAxisRaw("Jump");
     }
     void FixedUpdate()
     {
-       
-        rbody2D.velocity = new Vector2(input * speed * Time.deltaTime, rbody2D.velocity.y);
-        anim.SetFloat("xVelocity", Mathf.Abs(rbody2D.velocity.x));
+        rbody2D.velocity = new Vector2(inputHorizontal * speed * Time.deltaTime, rbody2D.velocity.y);
+        
+       // anim.SetFloat("yVelocity", rbody2D.velocity.y);
+        if (isGrounded && inputVertical == 1)
 
-        Jump();
-        
-       
-        
+        {
+            rbody2D.velocity = Vector2.up * jumpForce * Time.deltaTime;
+            
+
+
+
+        }
+        anim.SetFloat("xVelocity", Mathf.Abs(rbody2D.velocity.x));
+        anim.SetFloat("yVelocity", rbody2D.velocity.y);
+        anim.SetBool("isNotJumping", isGrounded);
+
+
+
+
+
         if (isFacingright && rbody2D.velocity.x < 0)
         {
             flip();
@@ -54,7 +70,6 @@ public class PlayerController : MonoBehaviour
             flip();
         }
     }
-
     void flip()
     {
 
@@ -64,18 +79,15 @@ public class PlayerController : MonoBehaviour
         isFacingright = !isFacingright;
     }
 
-    void Jump()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (isGrounded && Input.GetKey(KeyCode.Space))
-
+        if (collision.gameObject.CompareTag("Spike"))
         {
-            rbody2D.velocity = Vector2.up * jumpForce * Time.deltaTime;
-            anim.SetBool("isJumping", true);
+            gameObject.transform.position = spawnpoint.transform.position;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
 
         }
-
-        
-
     }
 
 
@@ -83,5 +95,7 @@ public class PlayerController : MonoBehaviour
 
 
 
-    
+
+
+
 }

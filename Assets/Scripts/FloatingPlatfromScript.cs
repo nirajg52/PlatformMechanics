@@ -5,8 +5,9 @@ using UnityEngine;
 public class FloatingPlatfromScript : MonoBehaviour
 {
 
-    public EdgeCollider2D collider;
+    public BoxCollider2D collider;
     public GameObject player;
+    public GameObject facingWhere;
     
     
     
@@ -14,7 +15,7 @@ public class FloatingPlatfromScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        collider = GetComponent<EdgeCollider2D>();
+        collider = GetComponent<BoxCollider2D>();
 
         
     }
@@ -22,14 +23,14 @@ public class FloatingPlatfromScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (player.transform.position.y > 10f)
+        if (player.transform.position.y <= facingWhere.transform.position.y )
         {
-            collider.isTrigger = false;
+            collider.isTrigger = true;
 
         }
         else
         {
-            collider.isTrigger = true;
+            collider.isTrigger = false;
         }
 
 

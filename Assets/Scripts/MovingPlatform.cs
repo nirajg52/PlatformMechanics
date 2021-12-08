@@ -4,30 +4,67 @@ using UnityEngine;
 
 public class MovingPlatform : MonoBehaviour
 {
+    public GameObject waypointObject;
     
-    public List<Vector2> waypoints;
+    public List<Transform> waypoints;
     
     public float speed;
-    private int currentIndex;
-    
+    private int currentIndex = 0;
 
-    void Start()
+
+    private void Awake()
     {
-        currentIndex = 0;
-        
+        waypoints = new List<Transform>();
+        foreach (Transform t in transform.parent.GetChild(0))
+        {
+            waypoints.Add(t);
+            if (waypoints.Count > 0)
+            {
+                transform.position = waypoints[0].position;
+            }
+        }
     }
 
     void Update()
     {
-        
-        transform.position = Vector2.MoveTowards(transform.position, waypoints[currentIndex], speed * Time.deltaTime);
+        if (waypoints.Count > 1) {
 
-        if(Vector2.Distance(transform.position,waypoints[currentIndex]) < 0.01f)
-        {
-            currentIndex = (currentIndex + 1) % waypoints.Count; 
+            transform.position = Vector2.MoveTowards(transform.position, waypoints[currentIndex].position, speed * Time.deltaTime);
+
+            if (Vector2.Distance(transform.position, waypoints[currentIndex].position) < 0.01f)
+            {
+                currentIndex = (currentIndex + 1) % waypoints.Count;
+            }
         }
-     
         
+    }
+
+    public void AddNewWaypoints()
+    {
+        GameObject obj = Instantiate(waypointObject, Vector2.zero, Quaternion.identity);
+        obj.transform.SetParent(transform.parent.GetChild(0));
+        obj.name = "Waypoint" + waypoints.Count;
+        waypoints.Add(obj.transform);
+        
+
+
+    }
+
+    public void RemoveWaypoints(int index)
+    {
+        waypoints.RemoveAt(index);
+        DestroyImmediate(transform.parent.GetChild(1).GetChild(index).gameObject);
+    }
+
+    public void ClearWayPoints()
+    {
+
+        for ( int i = 0; i < waypoints.Count; i++)
+        {
+            DestroyImmediate(waypoints[i].gameObject);
+
+        }
+        waypoints.Clear();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

@@ -15,10 +15,7 @@ public class CollaspisngPlatform : MonoBehaviour
         
     }
 
-    private void FixedUpdate()
-    {
-        Destroy(this.gameObject, destroyTime);
-    }
+    
 
     // Update is called once per frame
     private void OnCollisionEnter2D(Collision2D collision)
@@ -26,6 +23,11 @@ public class CollaspisngPlatform : MonoBehaviour
         if(collision.gameObject.tag == "Player")
         {
             anim.SetBool("isCollapsing", true);
+
+            Destroy(this.gameObject, destroyTime);
+
+            
+            
             
         }
     }

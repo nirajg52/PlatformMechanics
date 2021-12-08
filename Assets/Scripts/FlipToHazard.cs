@@ -1,27 +1,51 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FlipToHazard : MonoBehaviour
 {
 
-    
-    
-    public const float rot = 0.3f;
-    
+   
+    public float rotationSpeed;
+    private float rotZ;
+    public bool ClockWise;
+
+
+
+
 
     // Start is called before the first frame update
-    void Start()
-    {
-       
 
-
-    }
 
     // Update is called once per frame
     void Update()
     {
+
+        if (ClockWise == true)
+        {
+            rotZ -= Time.deltaTime * rotationSpeed;
+
+        }
+        else
+        {
+            rotZ += Time.deltaTime * rotationSpeed; ;
+        }
+
+        if (rotZ < 90)
+        {
+
+            transform.rotation = Quaternion.Euler(0, 0, rotZ);
+            
+
+        }
+
+        if (rotZ == 180)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+            
+        }
+
         
-        transform.Rotate(new Vector3(rot, 0f, 0f));
+
+
+
     }
 }

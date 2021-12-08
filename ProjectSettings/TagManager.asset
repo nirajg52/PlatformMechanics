@@ -6,6 +6,7 @@ TagManager:
   tags:
   - DeathZone
   - FerrisWheelPlatform
+  - Spike
   layers:
   - Default
   - TransparentFX
@@ -17,8 +18,8 @@ TagManager:
   - Spike
   - Platforms
   - Moving Platfrom
-  - 
-  - 
+  - Trampoline
+  - Player
   - 
   - 
   - 
