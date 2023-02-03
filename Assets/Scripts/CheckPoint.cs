@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEditor;
 
 public class CheckPoint : MonoBehaviour
@@ -11,7 +12,7 @@ public class CheckPoint : MonoBehaviour
         if(collision.gameObject.tag == "Player")
         {
             Debug.Log("Collision");
-            EditorApplication.ExitPlaymode();
+            SceneManager.LoadScene("Level");
             
         }
     }
